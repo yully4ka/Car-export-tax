@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Refusjon av engangsavgift</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    input, button { margin: 5px; padding: 8px; }
+    #result { margin-top: 15px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Refusjon av engansgavgift</h1>
+  <p>Kalkulatoren regner hvor mye av engangsavgiften potensielt du kan få refundertved eksport av et brukt kjøretøy</p>
+  <p>Fyll ut kjøretøy opplisninger</p>
+  <label>Førstegangs registreringsdato: <input type="date" id="regDate"></label><br>
+  <label>CO2 utslipp: <input type="number" id="co2"></label><br>
+  <label>NOX utslipp: <input type="number" id="nox"></label><br>
+  <label>Egenvekt: <input type="number" id="weight"></label><br>
+  <label>Motorkraft (kW): <input type="number" id="engine"></label><br>
+ <label>Drivstoff-type: <select id="fuel" name="fuel">
+  <option value="bensin">Bensin</option>
+  <option value="diesel">Diesel</option>
+  <option value="hybrid">Hybrid</option>
+  <option value="plugin">Ladbar hybrid</option>
+  <option value="electric">Elektrisk</option>
+</select></label><br>
+  <label>Er bilen brukt som drosje: <select id="taxi" name="taxi">
+  <option value="true">Ja</option>
+  <option value="false">Nei</option>
+</select></label><br>
+  <label>Utførselsdato: <input type="date" id="expDate"></label><br>
+
+
+    
+  <button onclick="calculate()">Calculate</button>
+  
+  <div id="payedTax"></div>
+  <div id="result"></div>
+
+
+  <script>
+    async function calculate() {
+      const regDate =  document.getElementById("regDate").value;
+      const co2 = parseFloat(document.getElementById("co2").value);
+      const nox = parseFloat(document.getElementById("nox").value);
+      const weight = parseFloat(document.getElementById("weight").value);
+      const engine = parseFloat(document.getElementById("engine").value);
+      const fuel = document.getElementById("fuel").value;
+      const taxi = document.getElementById("taxi").value;
+      const expDate = document.getElementById("expDate").value;
+
+      //check if data is extracted correctly
+      console.log("Registrerings dato: " + regDate);
+      console.log("CO2: " + co2);
+      console.log("NOX: " + nox);
+      console.log("Egenvekt: " + weight);
+      console.log("Motorkraft: " + engine);
+      console.log("Drivstoff: " + fuel);
+      console.log("Drosje: " + taxi);
+      console.log("Eksport dato: " + expDate);
+
+      const response = await fetch("/api/calc", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ regDate, co2, nox, weight, engine, fuel, taxi, expDate })
+      });
+
+      const data = await response.json();
+      document.getElementById("payedTax").innerText = "Engangsavgift som ble betalt ved førtsegansgregistrering: " + data.payedTax;
+      document.getElementById("result").innerText = "Du kan få refundert: " + data.result;
+    }
+    
+  </script>
+</body>
+</html>
