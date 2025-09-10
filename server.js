@@ -30,8 +30,10 @@ app.post("/api/calc", (req, res) => {
   let engineTax;
   let noxTax;
   let co2Tax;
+  let basicTax;
   let payedTax;
   let result;
+
 
   if (usedMonths >= 1 && usedMonths < 2) usage = 0.02;
   else if (usedMonths >= 2 && usedMonths < 3) usage = 0.04;
@@ -489,6 +491,174 @@ app.post("/api/calc", (req, res) => {
         }
 
         payedTax = vrakpant + weightTax + noxTax + co2Tax;
+        //chech result
+        console.log("Betalt engangsavgift: " + payedTax);
+
+        result = (payedTax - vrakpant) * (1 - usage) + vrakpant;
+        console.log("Refusjon av engangsavgift: " + result);
+
+        res.json({ payedTax, result });
+        break;
+      }
+
+      case 2021:
+      console.log("Case 2021");
+
+      if (usage == 0) {
+        result =
+          "Bilen er eldre enn 10 år. Det refunderes ikke engangsavgiften ved eksport.";
+        res.json({ result });
+        break;
+      }
+      // -> Check plug in
+      if (fuel == "electric" || fuel == "plugin") {
+        payedTax = 2400;
+        result = 0;
+        res.json({ payedTax, result });
+        break;
+      } else {
+        //Calculate weight tax
+        if (weight < 1201) {
+          weightTax = (weight - 500) * 26.81;
+        } else if (weight > 1200 && weight < 1401) {
+          weightTax = 700 * 26.81 + (weight - 1200) * 66.81;
+        } else if (weight > 1400 && weight < 1501) {
+          weightTax = 700 * 26.81 + 200 * 66.81 + (weight - 1400) * 208.78;
+        } else
+          weightTax =
+            700 * 26.81 + 200 * 66.81 + 100 * 208.78 + (weight - 1500) * 242.81;
+
+        //Calculate NOX tax
+        noxTax = nox * 77.14;
+
+        //Calculate CO2 tax
+        // check if CO2 is lower than 87
+        if (co2 < 88) {
+          co2Tax = 0;
+        } else if (co2 > 87 && co2 < 119) {
+          co2Tax = (co2 - 87) * 801;
+        } else if (co2 > 118 && co2 < 156) {
+          co2Tax = 31 * 801 + (co2 - 118) * 897.6;
+        } else if (co2 > 155 && co2 < 226) {
+          co2Tax = 31 * 801 + 37 * 897.6 + (co2 - 155) * 2352.1;
+        } else {
+          co2Tax =
+           31 * 801 + 37 * 897.6 + 70 * 2352.1 + (co2 - 225) * 3752.05;
+        }
+
+        payedTax = vrakpant + weightTax + noxTax + co2Tax;
+        //chech result
+        console.log("Betalt engangsavgift: " + payedTax);
+
+        result = (payedTax - vrakpant) * (1 - usage) + vrakpant;
+        console.log("Refusjon av engangsavgift: " + result);
+
+        res.json({ payedTax, result });
+        break;
+      }
+      case 2022:
+      console.log("Case 2022");
+
+      if (usage == 0) {
+        result =
+          "Bilen er eldre enn 10 år. Det refunderes ikke engangsavgiften ved eksport.";
+        res.json({ result });
+        break;
+      }
+      // -> Check plug in
+      if (fuel == "electric" || fuel == "plugin") {
+        payedTax = 2400;
+        result = 0;
+        res.json({ payedTax, result });
+        break;
+      } else {
+        //Calculate weight tax
+        if (weight < 1201) {
+          weightTax = (weight - 500) * 27.15;
+        } else if (weight > 1200 && weight < 1401) {
+          weightTax = 700 * 27.15 + (weight - 1200) * 67.68;
+        } else if (weight > 1400 && weight < 1501) {
+          weightTax = 700 * 27.15 + 200 * 67.68 + (weight - 1400) * 211.49;
+        } else
+          weightTax =
+            700 * 27.15 + 200 * 67.68 + 100 * 211.49 + (weight - 1500) * 245.97;
+
+        //Calculate NOX tax
+        noxTax = nox * 78.14;
+
+        //Calculate CO2 tax
+        // check if CO2 is lower than 87
+        if (co2 < 88) {
+          co2Tax = 0;
+        } else if (co2 > 87 && co2 < 119) {
+          co2Tax = (co2 - 87) * 1095.4;
+        } else if (co2 > 118 && co2 < 156) {
+          co2Tax = 31 * 1095.4 + (co2 - 118) * 1227.52;
+        } else if (co2 > 155 && co2 < 226) {
+          co2Tax = 31 * 1095.4 + 37 * 1227.52 + (co2 - 155) * 2382.68;
+        } else {
+          co2Tax =
+           31 * 1095.4 + 37 * 1227.52 + 70 * 2382.68 + (co2 - 225) * 3800.83;
+        }
+
+        payedTax = vrakpant + weightTax + noxTax + co2Tax;
+        //chech result
+        console.log("Betalt engangsavgift: " + payedTax);
+
+        result = (payedTax - vrakpant) * (1 - usage) + vrakpant;
+        console.log("Refusjon av engangsavgift: " + result);
+
+        res.json({ payedTax, result });
+        break;
+      }
+
+      case 2023:
+      console.log("Case 2023");
+
+      if (usage == 0) {
+        result =
+          "Bilen er eldre enn 10 år. Det refunderes ikke engangsavgiften ved eksport.";
+        res.json({ result });
+        break;
+      }
+      basicTax = (weight - 500) * 12.5;
+      // -> Check plug in
+      if (fuel == "electric" || fuel == "plugin") {
+        payedTax = vrakpant + basicTax;
+        result = (payedTax - vrakpant) * (1 - usage) + vrakpant;
+        res.json({ payedTax, result });
+        break;
+      } else {
+        //Calculate weight tax
+        if (weight < 1201) {
+          weightTax = (weight - 500) * 27.92;
+        } else if (weight > 1200 && weight < 1401) {
+          weightTax = 700 * 27.92 + (weight - 1200) * 69.57;
+        } else if (weight > 1400 && weight < 1501) {
+          weightTax = 700 * 27.92 + 200 * 69.57 + (weight - 1400) * 217.42;
+        } else
+          weightTax =
+            700 * 27.92 + 200 * 69.57 + 100 * 217.42 + (weight - 1500) * 252.85;
+
+        //Calculate NOX tax
+        noxTax = nox * 80.33;
+
+        //Calculate CO2 tax
+        // check if CO2 is lower than 87
+        if (co2 < 83) {
+          co2Tax = 0;
+        } else if (co2 > 82 && co2 < 119) {
+          co2Tax = (co2 - 82) * 1351.29;
+        } else if (co2 > 118 && co2 < 156) {
+          co2Tax = 36 * 1351.29 + (co2 - 118) * 1514.27;
+        } else if (co2 > 155 && co2 < 226) {
+          co2Tax = 36 * 1351.29 + 37 * 1514.27 + (co2 - 155) * 2939.27;
+        } else {
+          co2Tax =
+           36 * 1351.29 + 37 * 1514.27 + 70 * 2939.27 + (co2 - 225) * 4688.7;
+        }
+
+        payedTax = vrakpant + weightTax + noxTax + co2Tax + basicTax;
         //chech result
         console.log("Betalt engangsavgift: " + payedTax);
 
