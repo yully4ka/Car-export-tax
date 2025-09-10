@@ -50,14 +50,6 @@
       const expDate = document.getElementById("expDate").value;
 
       //check if data is extracted correctly
-      console.log("Registrerings dato: " + regDate);
-      console.log("CO2: " + co2);
-      console.log("NOX: " + nox);
-      console.log("Egenvekt: " + weight);
-      console.log("Motorkraft: " + engine);
-      console.log("Drivstoff: " + fuel);
-      console.log("Drosje: " + taxi);
-      console.log("Eksport dato: " + expDate);
 
       const response = await fetch("/api/calc", {
         method: "POST",
