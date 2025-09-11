@@ -669,6 +669,63 @@ app.post("/api/calc", (req, res) => {
         break;
       }
 
+      case 2024:
+      console.log("Case 2024");
+
+      if (usage == 0) {
+        result =
+          "Bilen er eldre enn 10 år. Det refunderes ikke engangsavgiften ved eksport.";
+        res.json({ result });
+        break;
+      }
+      basicTax = (weight - 500) * 12.98;
+      // -> Check plug in
+      if (fuel == "electric" || fuel == "plugin") {
+        payedTax = vrakpant + basicTax;
+        result = (payedTax - vrakpant) * (1 - usage) + vrakpant;
+        res.json({ payedTax, result });
+        break;
+      } else {
+        //Calculate weight tax
+        if (weight < 1201) {
+          weightTax = (weight - 500) * 28.98;
+        } else if (weight > 1200 && weight < 1401) {
+          weightTax = 700 * 28.98 + (weight - 1200) * 72.22;
+        } else if (weight > 1400 && weight < 1501) {
+          weightTax = 700 * 28.98 + 200 * 72.22 + (weight - 1400) * 225.68;
+        } else
+          weightTax =
+            700 * 28.98 + 200 * 72.22 + 100 * 225.68 + (weight - 1500) * 262.46;
+
+        //Calculate NOX tax
+        noxTax = nox * 82.38;
+
+        //Calculate CO2 tax
+        // check if CO2 is lower than 87
+        if (co2 < 70) {
+          co2Tax = 0;
+        } else if (co2 > 69 && co2 < 119) {
+          co2Tax = (co2 - 70) * 1402.64;
+        } else if (co2 > 118 && co2 < 156) {
+          co2Tax = 48 * 1402.64 + (co2 - 118) * 1571.81;
+        } else if (co2 > 155 && co2 < 226) {
+          co2Tax = 48 * 1402.64 + 37 * 1571.81 + (co2 - 155) * 3050.96;
+        } else {
+          co2Tax =
+           48 * 1402.64 + 37 * 1571.81 + 70 * 3050.96 + (co2 - 225) * 4866.87;
+        }
+
+        payedTax = vrakpant + weightTax + noxTax + co2Tax + basicTax;
+        //chech result
+        console.log("Betalt engangsavgift: " + payedTax);
+
+        result = (payedTax - vrakpant) * (1 - usage) + vrakpant;
+        console.log("Refusjon av engangsavgift: " + result);
+
+        res.json({ payedTax, result });
+        break;
+      }
+
     default:
       result =
         "Bilen kvalifiseres ikke for refusjon av engangsavgift ved eksport.";
