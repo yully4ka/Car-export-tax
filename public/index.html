@@ -1,67 +1,111 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Refusjon av engangsavgift</title>
-  <style>
+  <head>
+    <title>Refusjon av engangsavgift</title>
+    <!-- <style>
     body { font-family: Arial, sans-serif; margin: 40px; }
     input, button { margin: 5px; padding: 8px; }
     #result { margin-top: 15px; font-weight: bold; }
-  </style>
-</head>
-<body>
-  <h1>Refusjon av engansgavgift</h1>
-  <p>Kalkulatoren regner hvor mye av engangsavgiften potensielt du kan få refundertved eksport av et brukt kjøretøy</p>
-  <p>Fyll ut kjøretøy opplisninger</p>
-  <label>Førstegangs registreringsdato: <input type="date" id="regDate"></label><br>
-  <label>CO2 utslipp: <input type="number" id="co2"></label><br>
-  <label>NOX utslipp: <input type="number" id="nox"></label><br>
-  <label>Egenvekt: <input type="number" id="weight"></label><br>
-  <label>Motorkraft (kW): <input type="number" id="engine"></label><br>
- <label>Drivstoff-type: <select id="fuel" name="fuel">
-  <option value="bensin">Bensin</option>
-  <option value="diesel">Diesel</option>
-  <option value="hybrid">Hybrid</option>
-  <option value="plugin">Ladbar hybrid</option>
-  <option value="electric">Elektrisk</option>
-</select></label><br>
-  <label>Er bilen brukt som drosje: <select id="taxi" name="taxi">
-  <option value="true">Ja</option>
-  <option value="false">Nei</option>
-</select></label><br>
-  <label>Utførselsdato: <input type="date" id="expDate"></label><br>
+  </style> -->
 
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="container py-5">
+    <h1 class="mb-4">Refusjon av engansgavgift</h1>
+    <p>
+      Kalkulatoren regner hvor mye av engangsavgiften potensielt du kan få
+      refundertved eksport av et brukt kjøretøy
+    </p>
+    <p>Fyll ut kjøretøy opplisninger</p>
+    <div class="mb-3">
+      <label for="regDate" class="form-label"
+        >Førstegangs registreringsdato:</label
+      >
+      <input type="date" class="form-control" id="regDate" />
+    </div>
+    <div class="mb-3">
+      <label for="co2" class="form-label">CO2 utslipp: </label>
+      <input type="number" class="form-control" id="co2" />
+    </div>
+    <div class="mb-3">
+      <label for="nox" class="form-label">NOX utslipp: </label>
+      <input type="number" class="form-control" id="nox" />
+    </div>
+    <div class="mb-3">
+      <label for="weight" class="form-label">Egenvekt: </label>
+      <input type="number" class="form-control" id="weight" />
+    </div>
+    <div class="mb-3">
+      <label for="engine" class="form-label">Motorkraft (kW): </label>
+      <input type="number" class="form-control" id="engine" />
+    </div>
+    <div class="mb-3">
+      <label for="fuel" class="form-label">Drivstoff-type: </label>
+      <select id="fuel" class="form-select" name="fuel">
+        <option value="" selected disabled>Velg drivstoff</option>
+        <option value="bensin">Bensin</option>
+        <option value="diesel">Diesel</option>
+        <option value="hybrid">Hybrid</option>
+        <option value="plugin">Ladbar hybrid</option>
+        <option value="electric">Elektrisk</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="taxi" class="form-label">Er bilen brukt som drosje:</label>
+      <select id="taxi" class="form-select" name="taxi">
+        <option value="" selected disabled></option>
+        <option value="true">Ja</option>
+        <option value="false">Nei</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="expDate" class="form-label">Utførselsdato </label>
+      <input type="date" class="form-control" id="expDate" />
+    </div>
 
-    
-  <button onclick="calculate()">Calculate</button>
-  
-  <div id="payedTax"></div>
-  <div id="result"></div>
+    <button class="btn btn-primary" onclick="calculate()">Calculate</button>
 
+    <div id="payedTax"></div>
+    <div id="result"></div>
 
-  <script>
-    async function calculate() {
-      const regDate =  document.getElementById("regDate").value;
-      const co2 = parseFloat(document.getElementById("co2").value);
-      const nox = parseFloat(document.getElementById("nox").value);
-      const weight = parseFloat(document.getElementById("weight").value);
-      const engine = parseFloat(document.getElementById("engine").value);
-      const fuel = document.getElementById("fuel").value;
-      const taxi = document.getElementById("taxi").value;
-      const expDate = document.getElementById("expDate").value;
+    <script>
+      async function calculate() {
+        const regDate = document.getElementById("regDate").value;
+        const co2 = parseFloat(document.getElementById("co2").value);
+        const nox = parseFloat(document.getElementById("nox").value);
+        const weight = parseFloat(document.getElementById("weight").value);
+        const engine = parseFloat(document.getElementById("engine").value);
+        const fuel = document.getElementById("fuel").value;
+        const taxi = document.getElementById("taxi").value;
+        const expDate = document.getElementById("expDate").value;
 
-      //check if data is extracted correctly
+        //check if data is extracted correctly
 
-      const response = await fetch("/api/calc", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ regDate, co2, nox, weight, engine, fuel, taxi, expDate })
-      });
+        const response = await fetch("/api/calc", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            regDate,
+            co2,
+            nox,
+            weight,
+            engine,
+            fuel,
+            taxi,
+            expDate,
+          }),
+        });
 
-      const data = await response.json();
-      document.getElementById("payedTax").innerText = "Engangsavgift som ble betalt ved førtsegansgregistrering: " + data.payedTax;
-      document.getElementById("result").innerText = "Du kan få refundert: " + data.result;
-    }
-    
-  </script>
-</body>
+        const data = await response.json();
+        document.getElementById("payedTax").innerText =
+          "Engangsavgift som ble betalt ved førtsegansgregistrering: " +
+          data.payedTax;
+        document.getElementById("result").innerText =
+          "Du kan få refundert: " + data.result;
+      }
+    </script>
+  </body>
 </html>

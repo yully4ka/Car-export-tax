@@ -733,11 +733,6 @@ app.post("/api/calc", (req, res) => {
     // Code to execute if no case matches
   }
 
-  //const result = co2 + nox; // <-- replace with your formula
-  //check result
-
-  // console.log("The result is: " + result);
-  //  res.json({ result });
 });
 
 // Start server
